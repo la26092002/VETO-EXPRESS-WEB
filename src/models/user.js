@@ -1,29 +1,71 @@
-const Sequelize = require('sequelize');
+const { DataTypes } = require('sequelize');
 const sequelize = require('../db');
 
-const User = sequelize.define('user', {
-  firstName: {
-    type: Sequelize.STRING,
+const User = sequelize.define('User', {
+  userId: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true,
+  },
+  fullName: {
+    type: DataTypes.STRING(250),
     allowNull: false,
   },
-  lastName: {
-    type: Sequelize.STRING,
+  businessActivity: {
+    type: DataTypes.STRING(250),
     allowNull: false,
+  },
+  address: {
+    type: DataTypes.STRING(250),
+    allowNull: false,
+  },
+  tradeRegisterNumber: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  },
+  nif: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  },
+  nis: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  },
+  ai: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  },
+  phoneNumber: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  },
+  bankAccountNumber: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  },
+  companyCapital: {
+    type: DataTypes.STRING(250),
+    defaultValue: null,
   },
   email: {
-    type: Sequelize.STRING,
+    type: DataTypes.STRING(250),
     allowNull: false,
     unique: true,
     validate: {
       isEmail: true,
     },
   },
-  age: {
-    type: Sequelize.INTEGER,
+  password: {
+    type: DataTypes.STRING(250),
     allowNull: false,
-    validate: {
-      min: 0,
-    },
+  },
+  postalCode: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  },
+  logoImage: {
+    type: DataTypes.STRING(100),
+    allowNull: false,
   },
 });
 
