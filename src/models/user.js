@@ -28,6 +28,10 @@ const User = sequelize.define('User', {
       isEmail: true,
     },
   },
+  password: {  // Add password field
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
   telephone: {
     type: DataTypes.STRING(20),
     allowNull: false,
@@ -47,7 +51,7 @@ const User = sequelize.define('User', {
     type: DataTypes.ENUM(...Object.values(Acteur)),
     allowNull: false,
   },
-  
+
 
 });
 

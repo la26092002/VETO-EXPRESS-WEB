@@ -1,5 +1,4 @@
-// status.js
-export const Acteur = Object.freeze({
+const Acteur = Object.freeze({
     Docteur: "Docteur",
     Vendeur: "Vendeur",
     Client: "Client",
@@ -7,8 +6,7 @@ export const Acteur = Object.freeze({
     Livreur: "Livreur"
 });
 
-
-export const ServiceType = Object.freeze({
+const ServiceType = Object.freeze({
     Service1: "Service1",
     Service2: "Service2",
     Service3: "Service3",
@@ -16,7 +14,7 @@ export const ServiceType = Object.freeze({
     Service5: "Service5"
 });
 
-export const ProductType = Object.freeze({
+const ProductType = Object.freeze({
     ProductType1: "ProductType1",
     ProductType2: "ProductType2",
     ProductType3: "ProductType3",
@@ -24,4 +22,4 @@ export const ProductType = Object.freeze({
     ProductType5: "ProductType5"
 });
 
-
+module.exports = { Acteur, ServiceType, ProductType };
