@@ -1,5 +1,6 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../db');
+const { Acteur } = require('../constants/Enums');
 
 const User = sequelize.define('User', {
   userId: {
@@ -7,45 +8,17 @@ const User = sequelize.define('User', {
     primaryKey: true,
     autoIncrement: true,
   },
-  fullName: {
+  nom: {
     type: DataTypes.STRING(250),
     allowNull: false,
   },
-  businessActivity: {
+  nomEtablissement: {
     type: DataTypes.STRING(250),
     allowNull: false,
   },
-  address: {
+  adresseMap: {
     type: DataTypes.STRING(250),
     allowNull: false,
-  },
-  tradeRegisterNumber: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-  },
-  nif: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-  },
-  nis: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-  },
-  ai: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-  },
-  phoneNumber: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-  },
-  bankAccountNumber: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-  },
-  companyCapital: {
-    type: DataTypes.STRING(250),
-    defaultValue: null,
   },
   email: {
     type: DataTypes.STRING(250),
@@ -55,14 +28,27 @@ const User = sequelize.define('User', {
       isEmail: true,
     },
   },
-  postalCode: {
-    type: DataTypes.INTEGER,
+  telephone: {
+    type: DataTypes.STRING(20),
+    allowNull: false,
+    validate: {
+      is: /^[0-9+\-() ]+$/i, // Allow numbers, +, -, ()
+    },
+  },
+  businessActivity: {
+    type: DataTypes.STRING(250),
     allowNull: false,
   },
-  logoImage: {
-    type: DataTypes.STRING(100),
+  isValidate: {
+    type: DataTypes.BOOLEAN,
     allowNull: false,
   },
+  typeActeur: {
+    type: DataTypes.ENUM(...Object.values(Acteur)),
+    allowNull: false,
+  },
+  
+
 });
 
 module.exports = User;
