@@ -32,7 +32,7 @@ exports.register = async (req, res, next) => {
         });
 
         // Generate JWT Token
-        const token = jwt.sign({ userId: user.userId, typeActeur: user.typeActeur,isValidate:false }, process.env.JWT_SECRET, { expiresIn: '7d' });
+        const token = jwt.sign({ userId: user.userId, typeActeur: user.typeActeur, isValidate: false }, process.env.JWT_SECRET, { expiresIn: '7d' });
 
         res.status(201).json({
             message: 'User registered successfully',
@@ -63,14 +63,15 @@ exports.login = async (req, res, next) => {
 
         // Generate JWT Token
         const token = jwt.sign(
-            { userId: user.userId, typeActeur: user.typeActeur },
+            { userId: user.userId, typeActeur: user.typeActeur,isValidate: user.isValidate },
             process.env.JWT_SECRET,
             { expiresIn: '7d' }
         );
 
+
         res.status(200).json({
             message: 'Login successful',
-            user: { id: user.userId, typeActeur: user.typeActeur,isValidate:user.isValidate },
+            user: { id: user.userId, typeActeur: user.typeActeur, isValidate: user.isValidate },
             token,
         });
     } catch (error) {
@@ -81,8 +82,8 @@ exports.login = async (req, res, next) => {
 
 exports.getMe = async (req, res) => {
 
-     // Fetch user from database (excluding password)
-     const user = await User.findByPk(req.user.userId, {
+    // Fetch user from database (excluding password)
+    const user = await User.findByPk(req.user.userId, {
         attributes: { exclude: ['password'] }
     });
 
@@ -199,9 +200,10 @@ exports.validateAccount = async (req, res, next) => {
             }
 
             // Update the user's validation status in the database
-            await User.update({ isValidate: true }, { where: { email } });
-
-            return res.status(200).json({ message: "Account successfully validated" });
+            await User.update({ isValidate: true }, { where: { email } });const updatedUser = await User.findOne({ where: { email } });
+            return res.status(200).json({
+                message: "Account successfully validated"
+            });
         });
 
     } catch (error) {

@@ -3,12 +3,12 @@ const router = express.Router();
 const vendeurController = require('../controllers/vendeurController');
 const { verifyToken, isValidate } = require('../middlewares/authMiddleware');
 
-router.post('/ajouterProduit', verifyToken, isValidate,vendeurController.ajouterProduit);
-router.post('/modifierProduit', authController.login);
-router.get('/supprimerProduit', verifyToken, authController.getMe);
-router.get('/afficherProduits', verifyToken, authController.getMe);
+router.post('/ajouterProduit', verifyToken, isValidate, vendeurController.ajouterProduit);
+router.get('/afficherProduitsParUser', verifyToken, isValidate, vendeurController.afficherProduitParUser);
+router.get('/supprimerProduit', verifyToken, isValidate);
+router.get('/afficherProduits', verifyToken, isValidate);
 
-router.get('/afficherServiceVente', verifyToken, authController.getMe);
-router.get('/confirmerRefuserServiceVente', verifyToken, authController.getMe);
+router.get('/afficherServiceVente', verifyToken, isValidate);
+router.get('/confirmerRefuserServiceVente', verifyToken, isValidate);
 
 module.exports = router;
