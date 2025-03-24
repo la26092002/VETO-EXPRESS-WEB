@@ -1,6 +1,7 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../db');
 const User = require('./user');
+const { ServiceVenteType } = require('../constants/Enums');
 
 
 const ServiceVente = sequelize.define('ServiceVente', {
@@ -46,9 +47,9 @@ const ServiceVente = sequelize.define('ServiceVente', {
         },
     },
 
-    // Invoice type (buy or sale)
+    
     type: {
-         type: DataTypes.ENUM(...Object.values(ServiceType)),
+         type: DataTypes.ENUM(...Object.values(ServiceVenteType)),
         allowNull: false,
     },
 });

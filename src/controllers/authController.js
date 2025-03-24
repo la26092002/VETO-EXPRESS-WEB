@@ -49,16 +49,18 @@ exports.login = async (req, res, next) => {
     try {
         const { email, password } = req.body;
 
+
         // Check if user exists
         const user = await User.findOne({ where: { email } });
         if (!user) {
-            return res.status(401).json({ message: 'Invalid email or password' });
+            return res.status(401).json({ message: 'Invalid email ' });
         }
+        console.log(user)
 
         // Compare password
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
-            return res.status(401).json({ message: 'Invalid email or password' });
+            return res.status(401).json({ message: 'Invalid  password' });
         }
 
         // Generate JWT Token
@@ -230,8 +232,9 @@ exports.changePassword = async (req, res, next) => {
                 return res.status(400).json({ message: "Incorrect validation code" });
             }
 
+            const hashedPassword = await bcrypt.hash(newPassword, 10);
             // Update the user's validation status in the database
-            await User.update({ password: newPassword }, { where: { email } });
+            await User.update({ password: hashedPassword }, { where: { email } });
 
             return res.status(200).json({ message: "Account successfully update password" });
         });

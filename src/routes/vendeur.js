@@ -5,8 +5,8 @@ const { verifyToken, isValidate } = require('../middlewares/authMiddleware');
 
 router.post('/ajouterProduit', verifyToken, isValidate, vendeurController.ajouterProduit);
 router.get('/afficherProduitsParUser', verifyToken, isValidate, vendeurController.afficherProduitParUser);
-router.get('/supprimerProduit', verifyToken, isValidate);
-router.get('/afficherProduits', verifyToken, isValidate);
+router.put('/modifierProduit/:productId', verifyToken, isValidate, vendeurController.modifierProduit);
+router.delete('/supprimerProduit/:productId', verifyToken, isValidate, vendeurController.supprimerProduit);
 
 router.get('/afficherServiceVente', verifyToken, isValidate);
 router.get('/confirmerRefuserServiceVente', verifyToken, isValidate);

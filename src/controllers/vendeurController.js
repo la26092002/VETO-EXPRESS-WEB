@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken'); // Ensure you import jwt
 const bcrypt = require('bcrypt'); // Ensure bcrypt is used to hash/compare passwords
 const Product = require('../models/product');
-const { Acteur } = require('../constants/Enums');
+const { Acteur, ProductType } = require('../constants/Enums');
 
 
 exports.ajouterProduit = async (req, res, next) => {
@@ -84,3 +84,76 @@ exports.afficherProduitParUser = async (req, res, next) => {
     }
 };
 
+
+
+exports.modifierProduit = async (req, res, next) => {
+    try {
+        const userId = req.user?.userId; // Ensure userId is extracted properly
+        const { productId } = req.params; // Extract productId
+
+        console.log("User ID:", userId);
+        console.log("Product ID:", productId);
+
+        if (!productId) {
+            return res.status(400).json({ message: "Product ID is required" });
+        }
+
+        if (!userId) {
+            return res.status(401).json({ message: "Unauthorized: User ID is missing" });
+        }
+
+        // Extract updated fields
+        const { productName, productImage, productPrice, productType } = req.body;
+
+        // Check if product exists and belongs to the user
+        const product = await Product.findOne({ where: { productId: parseInt(productId), userId } });
+
+        if (!product) {
+            return res.status(404).json({ message: "Product not found or you don't have permission to update it" });
+        }
+
+        if (!Object.values(ProductType).includes(productType)) {
+            return res.status(400).json({ message: "Invalid product type" });
+        }
+
+        // Update product details
+        await product.update({
+            productName: productName || product.productName,
+            productImage: productImage || product.productImage,
+            productPrice: productPrice ? parseInt(productPrice) : product.productPrice,
+            productType: productType || product.productType,
+        });
+
+        res.status(200).json({
+            message: "Product updated successfully",
+            result: product,
+        });
+    } catch (error) {
+        console.error("Update Error:", error);
+        res.status(500).json({ message: "Internal Server Error", error: error.message });
+    }
+};
+
+
+
+
+exports.supprimerProduit = async (req, res, next) => {
+    try {
+        const userId = req.user.userId; // Authenticated user ID
+        const { productId } = req.params; // Product ID from request params
+
+        // Check if product exists and belongs to the user
+        const product = await Product.findOne({ where: { productId: parseInt(productId), userId } });
+
+        if (!product) {
+            return res.status(404).json({ message: "Product not found or you don't have permission to delete it" });
+        }
+
+        // Delete product
+        await product.destroy();
+
+        res.status(200).json({ message: "Product deleted successfully" });
+    } catch (error) {
+        next(error);
+    }
+};
