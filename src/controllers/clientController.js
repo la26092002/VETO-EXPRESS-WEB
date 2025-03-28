@@ -1,9 +1,12 @@
-const { ServiceVenteType } = require('../constants/Enums');
+const { ServiceVenteType, ServiceType, Acteur } = require('../constants/Enums');
 const ServiceVente = require('../models/ServiceVente');
+const ServiceConsultation = require('../models/serviceConsultation');
+
 const { v4: uuidv4 } = require('uuid'); // For generating unique serviceId
+const User = require('../models/user');
 
 
-exports.creerService = async (req, res) => {
+exports.creerServiceVente = async (req, res) => {
     try {
         const clientId = req.user?.userId; // Get client ID from authenticated user
         const { vendeurId, produits, type } = req.body;
@@ -43,3 +46,53 @@ exports.creerService = async (req, res) => {
         res.status(500).json({ message: "Internal server error", error: error.message });
     }
 };
+
+
+
+exports.creerServiceConsultation = async (req, res) => {
+    try {
+        const clientId = req.user?.userId; // Get client ID from authenticated user
+        const { docteurId, type } = req.body;
+
+        console.log("Client ID:", clientId);
+        console.log("Doctor ID:", docteurId);
+        console.log("Type:", type);
+
+        // Validate inputs
+        if (!docteurId || !type) {
+            return res.status(400).json({ message: "All fields (docteurId, type) are required" });
+        }
+
+        if (!Object.values(ServiceType).includes(type)) {
+            return res.status(400).json({ message: "Invalid service type" });
+        }
+
+        // Generate unique serviceId
+        const serviceId = uuidv4();
+
+
+        const docteur = await User.findOne({ where: { userId:docteurId } });
+        if (!docteur.typeActeur === Acteur.Docteur) {
+            return res.status(404).json({ message: "docteurId not found as doctor" });
+        }
+        // Create the consultation service
+        const newService = await ServiceConsultation.create({
+            serviceId,
+            docteurId,
+            clientId,
+            type,
+        });
+
+        res.status(201).json({
+            message: "Consultation service created successfully",
+            service: newService,
+        });
+    } catch (error) {
+        console.error("Error while creating the consultation service:", error);
+        res.status(500).json({ message: "Internal server error", error: error.message });
+    }
+};
+
+
+//afficher des veudeur a cote de client(en utilisant API de Google)
+//afficher des docteur a cote de client((en utilisant API de Google)

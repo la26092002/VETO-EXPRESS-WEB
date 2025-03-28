@@ -1,6 +1,7 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../db');
 const User = require('./user');
+const { ServiceType } = require('../constants/Enums');
 
 
 const ServiceConsultation = sequelize.define('ServiceConsultation', {

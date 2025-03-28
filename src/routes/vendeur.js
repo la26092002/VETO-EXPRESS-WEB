@@ -8,7 +8,7 @@ router.get('/afficherProduitsParUser', verifyToken, isValidate, vendeurControlle
 router.put('/modifierProduit/:productId', verifyToken, isValidate, vendeurController.modifierProduit);
 router.delete('/supprimerProduit/:productId', verifyToken, isValidate, vendeurController.supprimerProduit);
 
-router.get('/afficherServiceVente', verifyToken, isValidate);
+router.get('/afficherServiceVenteParUser', verifyToken, isValidate, vendeurController.afficherServicesVenteParUser);
 router.get('/confirmerRefuserServiceVente', verifyToken, isValidate);
 
 module.exports = router;

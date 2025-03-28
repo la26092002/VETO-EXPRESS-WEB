@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken'); // Ensure you import jwt
 const bcrypt = require('bcrypt'); // Ensure bcrypt is used to hash/compare passwords
 const Product = require('../models/product');
 const { Acteur, ProductType } = require('../constants/Enums');
+const ServiceVente = require('../models/ServiceVente');
 
 
 exports.ajouterProduit = async (req, res, next) => {
@@ -71,7 +72,7 @@ exports.afficherProduitParUser = async (req, res, next) => {
 
         res.status(200).json({
             message: "Products retrieved successfully",
-            result: products,
+            result: Product,
             pagination: {
                 currentPage: page,
                 pageSize: size,
@@ -157,3 +158,65 @@ exports.supprimerProduit = async (req, res, next) => {
         next(error);
     }
 };
+
+
+//Afficher Services Vente par user 
+exports.afficherServicesVenteParUser = async (req, res, next) => {
+    try {
+        const userId = req.user.userId; // Get userId from authenticated user
+
+        
+        if( req.user.typeActeur !== Acteur.Vendeur){
+            return res.status(400).json({ message: "the user must be Seller" });
+        }
+        // Extract pagination parameters from query (default: page=1, size=10)
+        let { page, size } = req.query;
+        page = parseInt(page) || 1;
+        size = parseInt(size) || 10;
+
+        if (page < 1 || size < 1) {
+            return res.status(400).json({ message: "Page and size must be positive numbers" });
+        }
+
+        // Calculate offset
+        const offset = (page - 1) * size;
+
+        // Fetch products with pagination
+        const { rows: services, count: totalItems } = await ServiceVente.findAndCountAll({
+            where: { vendeurId:userId },
+            order: [['createdAt', 'DESC']],
+            limit: size,
+            offset: offset,
+        });
+
+        if (services.length === 0) {
+            return res.status(200).json({
+                message: "No services available",
+                result: [],
+                pagination: {
+                    currentPage: page,
+                    pageSize: size,
+                    totalItems: totalItems,
+                    totalPages: Math.ceil(totalItems / size),
+                }
+            });
+        }
+
+        res.status(200).json({
+            message: "Services retrieved successfully",
+            result: services,
+            pagination: {
+                currentPage: page,
+                pageSize: size,
+                totalItems: totalItems,
+                totalPages: Math.ceil(totalItems / size),
+            },
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+
+
+//Confirmer ou refuser Service Vente

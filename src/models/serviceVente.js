@@ -52,10 +52,15 @@ const ServiceVente = sequelize.define('ServiceVente', {
          type: DataTypes.ENUM(...Object.values(ServiceVenteType)),
         allowNull: false,
     },
+   
+
 });
 
-// Define association
-User.hasMany(ServiceVente, { foreignKey: 'userId' });
-ServiceVente.belongsTo(User, { foreignKey: 'userId' });
+User.hasMany(ServiceVente, { foreignKey: 'vendeurId' });
+ServiceVente.belongsTo(User, { foreignKey: 'vendeurId', as: 'vendeur' });
+
+User.hasMany(ServiceVente, { foreignKey: 'clientId' });
+ServiceVente.belongsTo(User, { foreignKey: 'clientId', as: 'client' });
+
 
 module.exports = ServiceVente;
