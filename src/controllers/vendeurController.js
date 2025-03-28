@@ -12,12 +12,12 @@ exports.ajouterProduit = async (req, res, next) => {
             productPrice,
             productType } = req.body;
 
-        if (req.user.typeActeur !== Acteur.Vendeur){
+        if (req.user.typeActeur !== Acteur.Vendeur) {
             return res.status(401).json({ message: 'Just seller have access to add product' });
         }
 
         // Check if user exists
-        if (!productName || !productImage || !productPrice || !productType ) {
+        if (!productName || !productImage || !productPrice || !productType) {
             return res.status(401).json({ message: 'Invalid productName, productImage, productPrice or productType' });
         }
 
@@ -27,13 +27,13 @@ exports.ajouterProduit = async (req, res, next) => {
             userId: parseInt(req.user.userId),
             productName,
             productImage,
-            productPrice:parseInt(productPrice),
+            productPrice: parseInt(productPrice),
             productType,
         });
 
         res.status(200).json({
-            message: 'Login successful',
-            result: { userId:req.user.userId,productName, productImage,productPrice:parseInt(productPrice),productType },
+            message: 'Product added successfully',
+            result: { userId: req.user.userId, productName, productImage, productPrice: parseInt(productPrice), productType },
         });
     } catch (error) {
         next(error);
@@ -66,13 +66,12 @@ exports.afficherProduitParUser = async (req, res, next) => {
             offset: offset,
         });
 
-        if (products.length === 0) {
-            return res.status(404).json({ message: "No products found for this user" });
-        }
+        console.log(userId)
+        
 
         res.status(200).json({
             message: "Products retrieved successfully",
-            result: Product,
+            result: products,
             pagination: {
                 currentPage: page,
                 pageSize: size,
@@ -165,8 +164,8 @@ exports.afficherServicesVenteParUser = async (req, res, next) => {
     try {
         const userId = req.user.userId; // Get userId from authenticated user
 
-        
-        if( req.user.typeActeur !== Acteur.Vendeur){
+
+        if (req.user.typeActeur !== Acteur.Vendeur) {
             return res.status(400).json({ message: "the user must be Seller" });
         }
         // Extract pagination parameters from query (default: page=1, size=10)
@@ -183,7 +182,7 @@ exports.afficherServicesVenteParUser = async (req, res, next) => {
 
         // Fetch products with pagination
         const { rows: services, count: totalItems } = await ServiceVente.findAndCountAll({
-            where: { vendeurId:userId },
+            where: { vendeurId: userId },
             order: [['createdAt', 'DESC']],
             limit: size,
             offset: offset,

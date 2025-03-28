@@ -1,7 +1,7 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../db');
 const User = require('./user');
-const { ServiceVenteType } = require('../constants/Enums');
+const { ServiceVenteType, ServiceStatus, ServiceLivraisonPar } = require('../constants/Enums');
 
 
 const ServiceVente = sequelize.define('ServiceVente', {
@@ -9,7 +9,7 @@ const ServiceVente = sequelize.define('ServiceVente', {
         type: DataTypes.STRING(255),
         primaryKey: true,
     },
-   
+
 
     // Foreign key referencing User
     vendeurId: {
@@ -47,12 +47,23 @@ const ServiceVente = sequelize.define('ServiceVente', {
         },
     },
 
-    
+
     type: {
-         type: DataTypes.ENUM(...Object.values(ServiceVenteType)),
+        type: DataTypes.ENUM(...Object.values(ServiceVenteType)),
         allowNull: false,
     },
-   
+    status: {
+        type: DataTypes.ENUM(...Object.values(ServiceStatus)),
+        allowNull: false,
+        defaultValue: ServiceStatus.EnCours
+    },
+    ServiceLivraisonPar: {
+        type: DataTypes.ENUM(...Object.values(ServiceLivraisonPar)),
+        allowNull: false,
+        defaultValue: ServiceLivraisonPar.Livreur
+    },
+
+
 
 });
 

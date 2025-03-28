@@ -30,4 +30,16 @@ const ProductType = Object.freeze({
     ProductType5: "ProductType5"
 });
 
-module.exports = { Acteur, ServiceType, ProductType, ServiceVenteType };
+const ServiceStatus = Object.freeze({
+    Confirmé: "Confirmé",
+    EnCours: "En cours",
+    Terminé: "Terminé",
+    Annulé: "Annulé",
+    Echoué: "Échoué"
+});
+
+const ServiceLivraisonPar = Object.freeze({
+    Livreur: "Livreur",   // Livraison effectuée par un livreur
+    Client: "Client",     // Livraison effectuée par le client (auto-récupération)
+});
+module.exports = { Acteur, ServiceType, ProductType, ServiceVenteType,ServiceStatus,ServiceLivraisonPar };

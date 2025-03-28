@@ -27,12 +27,12 @@ exports.register = async (req, res, next) => {
             password: hashedPassword,
             telephone,
             businessActivity,
-            isValidate: false, // Default is not validated
+            isValidate: true, // Default is not validated false
             typeActeur,
         });
 
-        // Generate JWT Token
-        const token = jwt.sign({ userId: user.userId, typeActeur: user.typeActeur, isValidate: false }, process.env.JWT_SECRET, { expiresIn: '7d' });
+        // Generate JWT Token  isValidate: false must be false on production 
+        const token = jwt.sign({ userId: user.userId, typeActeur: user.typeActeur, isValidate: true }, process.env.JWT_SECRET, { expiresIn: '7d' });
 
         res.status(201).json({
             message: 'User registered successfully',
