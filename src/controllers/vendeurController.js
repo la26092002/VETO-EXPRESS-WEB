@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken'); // Ensure you import jwt
 const bcrypt = require('bcrypt'); // Ensure bcrypt is used to hash/compare passwords
 const Product = require('../models/product');
-const { Acteur, ProductType } = require('../constants/Enums');
+const { Acteur, ProductType, ServiceStatus } = require('../constants/Enums');
 const ServiceVente = require('../models/ServiceVente');
 
 
@@ -67,7 +67,7 @@ exports.afficherProduitParUser = async (req, res, next) => {
         });
 
         console.log(userId)
-        
+
 
         res.status(200).json({
             message: "Products retrieved successfully",
@@ -218,4 +218,30 @@ exports.afficherServicesVenteParUser = async (req, res, next) => {
 
 
 
-//Confirmer ou refuser Service Vente
+//Confirmer ou refuser Service Vente  (update service vente)
+exports.modifierStatusServicesVenteParUser = async (req, res, next) => {
+    try {
+        const userId = req.user.userId;
+        const { serviceId } = req.query;
+        const { status } = req.body;
+
+        if (!Object.values(ServiceStatus).includes(status)) {
+            return res.status(400).json({ message: "Invalid service status" });
+        }
+
+        const serviceVente = await ServiceVente.findOne({ where: { serviceId:serviceId, vendeurId: userId } });
+
+        if (!serviceVente) {
+            return res.status(404).json({ message: "Service not found or you don't have permission to modify it" });
+        }
+
+        await serviceVente.update({ status });
+
+        res.status(200).json({
+            message: "Service status updated successfully",
+            result: serviceVente,
+        });
+    } catch (error) {
+        next(error);
+    }
+};

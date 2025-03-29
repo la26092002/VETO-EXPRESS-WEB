@@ -95,4 +95,30 @@ exports.creerServiceConsultation = async (req, res) => {
 
 
 //afficher des veudeur a cote de client(en utilisant API de Google)
+exports.getVendeurs = async (req, res) => {
+    try {
+        const vendeurs = await User.findAll({
+            where: { typeActeur: Acteur.Vendeur },attributes: { exclude: ['password'] }
+            
+        });
+
+        res.status(200).json({ vendeurs });
+    } catch (error) {
+        console.error("Erreur lors de la récupération des vendeurs:", error);
+        res.status(500).json({ message: "Erreur interne du serveur", error: error.message });
+    }
+};
+
 //afficher des docteur a cote de client((en utilisant API de Google)
+exports.getDocteurs = async (req, res) => {
+    try {
+        const docteurs = await User.findAll({
+            where: { typeActeur: Acteur.Docteur },attributes: { exclude: ['password'] }
+        });
+
+        res.status(200).json({ docteurs });
+    } catch (error) {
+        console.error("Erreur lors de la récupération des docteurs:", error);
+        res.status(500).json({ message: "Erreur interne du serveur", error: error.message });
+    }
+};
