@@ -65,14 +65,15 @@ exports.afficherServiceConsultationParUser = async (req, res, next) => {
 
 
 
-//Confirmer ou refuser Service Vente  (update service vente)
-exports.modifierStatusServiceConsultationParUser = async (req, res, next) => {
+// Confirmer ou refuser Service Vente (update service vente)
+exports.modifierServiceConsultationParUser = async (req, res, next) => {
     try {
         const userId = req.user.userId;
         const { serviceId } = req.query;
-        const { status } = req.body;
+        const { status, dateRdv } = req.body;
 
-        if (!Object.values(ServiceStatus).includes(status)) {
+        // Validate status if provided
+        if (status && !Object.values(ServiceStatus).includes(status)) {
             return res.status(400).json({ message: "Invalid service status" });
         }
 
@@ -82,15 +83,21 @@ exports.modifierStatusServiceConsultationParUser = async (req, res, next) => {
             return res.status(404).json({ message: "Service not found or you don't have permission to modify it" });
         }
 
-        await serviceConsultation.update({ status });
+        // Prepare update fields
+        const updateData = {};
+        if (status) updateData.status = status;
+        if (dateRdv) updateData.dateRdv = dateRdv;
+
+        await serviceConsultation.update(updateData);
 
         res.status(200).json({
-            message: "Service status updated successfully",
+            message: "Service updated successfully",
             result: serviceConsultation,
         });
     } catch (error) {
         next(error);
     }
 };
+
 
 

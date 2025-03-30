@@ -10,13 +10,13 @@ const ServiceVente = require('../models/serviceVente');
 exports.creerServiceVente = async (req, res) => {
     try {
         const clientId = req.user?.userId; // Get client ID from authenticated user
-        const { vendeurId, produits, type } = req.body;
+        const { vendeurId, produits, type,ServiceLivraisonPar } = req.body;
 
 
 
         // Validate inputs
-        if (!vendeurId || !Array.isArray(produits) || produits.length === 0 || !type) {
-            return res.status(400).json({ message: "All fields (vendeurId, produits, type) are required" });
+        if (!vendeurId || !Array.isArray(produits) || produits.length === 0 || !type || !ServiceLivraisonPar) {
+            return res.status(400).json({ message: "All fields (vendeurId, produits, type, ServiceLivraisonPar ) are required" });
         }
 
         if (!Object.values(ServiceVenteType).includes(type)) {
@@ -33,6 +33,7 @@ exports.creerServiceVente = async (req, res) => {
             clientId,
             produits,
             type,
+            ServiceLivraisonPar
         });
 
         res.status(201).json({

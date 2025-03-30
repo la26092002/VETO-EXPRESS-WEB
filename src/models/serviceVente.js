@@ -59,7 +59,7 @@ const ServiceVente = sequelize.define('ServiceVente', {
     ServiceLivraisonPar: {
         type: DataTypes.ENUM(...Object.values(ServiceLivraisonPar)),
         allowNull: false,
-        defaultValue: ServiceLivraisonPar.Livreur
+        defaultValue: ServiceLivraisonPar.VetoMoov
     },
 
 

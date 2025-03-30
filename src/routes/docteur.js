@@ -5,6 +5,6 @@ const { verifyToken, isValidate, isDocteur } = require('../middlewares/authMiddl
 
 
 router.get('/afficherServiceConsultationParUser', verifyToken, isValidate, isDocteur, docteurController.afficherServiceConsultationParUser);
-router.put('/modifierStatusServiceConsultationParUser', verifyToken, isValidate, isDocteur, docteurController.modifierStatusServiceConsultationParUser);
+router.put('/modifierServiceConsultationParUser', verifyToken, isValidate, isDocteur, docteurController.modifierServiceConsultationParUser);
 
 module.exports = router;

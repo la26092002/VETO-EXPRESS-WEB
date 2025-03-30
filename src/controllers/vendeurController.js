@@ -2,7 +2,8 @@ const jwt = require('jsonwebtoken'); // Ensure you import jwt
 const bcrypt = require('bcrypt'); // Ensure bcrypt is used to hash/compare passwords
 const Product = require('../models/product');
 const { Acteur, ProductType, ServiceStatus } = require('../constants/Enums');
-const ServiceVente = require('../models/ServiceVente');
+const ServiceVente = require('../models/serviceVente');
+
 
 
 exports.ajouterProduit = async (req, res, next) => {
@@ -14,6 +15,10 @@ exports.ajouterProduit = async (req, res, next) => {
 
         if (req.user.typeActeur !== Acteur.Vendeur) {
             return res.status(401).json({ message: 'Just seller have access to add product' });
+        }
+
+        if (!Object.values(ProductType).includes(productType)) {
+            return res.status(400).json({ message: "Invalid ProductType" });
         }
 
         // Check if user exists
@@ -229,7 +234,7 @@ exports.modifierStatusServicesVenteParUser = async (req, res, next) => {
             return res.status(400).json({ message: "Invalid service status" });
         }
 
-        const serviceVente = await ServiceVente.findOne({ where: { serviceId:serviceId, vendeurId: userId } });
+        const serviceVente = await ServiceVente.findOne({ where: { serviceId: serviceId, vendeurId: userId } });
 
         if (!serviceVente) {
             return res.status(404).json({ message: "Service not found or you don't have permission to modify it" });
