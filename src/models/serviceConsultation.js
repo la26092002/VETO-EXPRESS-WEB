@@ -10,7 +10,6 @@ const ServiceConsultation = sequelize.define('ServiceConsultation', {
         primaryKey: true,
     },
    
-
     // Foreign key referencing User
     docteurId: {
         type: DataTypes.INTEGER,
@@ -31,6 +30,11 @@ const ServiceConsultation = sequelize.define('ServiceConsultation', {
         onDelete: 'CASCADE',
     },
 
+     // Date de rendez-vous
+     dateRdv: {
+        type: DataTypes.DATE,
+        allowNull: true,
+    },
 
     // Invoice type (buy or sale)
     type: {
@@ -40,7 +44,9 @@ const ServiceConsultation = sequelize.define('ServiceConsultation', {
 });
 
 // Define association
-User.hasMany(ServiceConsultation, { foreignKey: 'userId' });
-ServiceConsultation.belongsTo(User, { foreignKey: 'userId' });
+User.hasMany(ServiceConsultation, { foreignKey: 'docteurId' });
+ServiceConsultation.belongsTo(User, { foreignKey: 'docteurId', as: 'docteur' });
 
+User.hasMany(ServiceConsultation, { foreignKey: 'clientId' });
+ServiceConsultation.belongsTo(User, { foreignKey: 'clientId', as: 'client' });
 module.exports = ServiceConsultation;

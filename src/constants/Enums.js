@@ -7,27 +7,19 @@ const Acteur = Object.freeze({
 });
 
 const ServiceType = Object.freeze({
-    Service1: "Service1",
-    Service2: "Service2",
-    Service3: "Service3",
-    Service4: "Service4",
-    Service5: "Service5"
+    DemandeRdv: "Demande de rendez-vous",
+    ConsultationSuivi: "Consultation de suivi",
+    RdvRapide: "Rendez-vous rapide"
 });
 
 const ServiceVenteType = Object.freeze({
-    Service1: "Service1",
-    Service2: "Service2",
-    Service3: "Service3",
-    Service4: "Service4",
-    Service5: "Service5"
+    ProduitVeterinaire: "Produit vétérinaire",
+    ProduitAnimalerie: "Produit animalerie"
 });
 
 const ProductType = Object.freeze({
-    ProductType1: "ProductType1",
-    ProductType2: "ProductType2",
-    ProductType3: "ProductType3",
-    ProductType4: "ProductType4",
-    ProductType5: "ProductType5"
+    Veterinaire: "Produit vétérinaire",
+    Animalerie: "Produit animalerie"
 });
 
 const ServiceStatus = Object.freeze({
@@ -39,7 +31,8 @@ const ServiceStatus = Object.freeze({
 });
 
 const ServiceLivraisonPar = Object.freeze({
-    Livreur: "Livreur",   // Livraison effectuée par un livreur
-    Client: "Client",     // Livraison effectuée par le client (auto-récupération)
+    VetoLib: "VetoLib", // Prise de rendez-vous en ligne avec un professionnel de la santé
+    VetoMoov: "VetoMoov", // Livraison sécurisée des produits vétérinaires
+    Urgence: "Urgence" // À revoir plus tard
 });
-module.exports = { Acteur, ServiceType, ProductType, ServiceVenteType,ServiceStatus,ServiceLivraisonPar };
+module.exports = { Acteur, ServiceType, ProductType, ServiceVenteType, ServiceStatus, ServiceLivraisonPar };

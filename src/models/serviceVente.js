@@ -10,7 +10,6 @@ const ServiceVente = sequelize.define('ServiceVente', {
         primaryKey: true,
     },
 
-
     // Foreign key referencing User
     vendeurId: {
         type: DataTypes.INTEGER,
@@ -39,8 +38,8 @@ const ServiceVente = sequelize.define('ServiceVente', {
                     throw new Error('Items must be an array');
                 }
                 value.forEach(item => {
-                    if (typeof item.nom !== 'string' || typeof item.prix !== 'number') {
-                        throw new Error('Chaque produit doit avoir un nom (string) et un prix (number) valides');
+                    if (typeof item.productId !== 'number' || typeof item.nom !== 'string' || typeof item.prix !== 'number' || typeof item.productImage !== 'string') {
+                        throw new Error('Chaque produit doit avoir un productId (number), un nom (string), un prix (number) et un productImage (string) ');
                     }
                 });
             },

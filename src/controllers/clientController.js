@@ -1,9 +1,10 @@
 const { ServiceVenteType, ServiceType, Acteur } = require('../constants/Enums');
-const ServiceVente = require('../models/ServiceVente');
+
 const ServiceConsultation = require('../models/serviceConsultation');
 
 const { v4: uuidv4 } = require('uuid'); // For generating unique serviceId
 const User = require('../models/user');
+const ServiceVente = require('../models/serviceVente');
 
 
 exports.creerServiceVente = async (req, res) => {
@@ -11,10 +12,7 @@ exports.creerServiceVente = async (req, res) => {
         const clientId = req.user?.userId; // Get client ID from authenticated user
         const { vendeurId, produits, type } = req.body;
 
-        console.log("Client ID:", clientId);
-        console.log("Seller ID:", vendeurId);
-        console.log("Products:", produits);
-        console.log("Type:", type);
+
 
         // Validate inputs
         if (!vendeurId || !Array.isArray(produits) || produits.length === 0 || !type) {

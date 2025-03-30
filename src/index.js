@@ -5,6 +5,7 @@ const express = require('express');
 const authRoutes = require('./routes/auth');
 const vendeurRoutes = require('./routes/vendeur');
 const clientRoutes = require('./routes/client');
+const docteurRoutes = require('./routes/docteur');
 
 // import swagger ui module and swagger json file
 
@@ -26,6 +27,7 @@ app.get('/', (req, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/vendeur', vendeurRoutes);
 app.use('/api/client', clientRoutes);
+app.use('/api/docteur', docteurRoutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

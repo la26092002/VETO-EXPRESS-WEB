@@ -41,7 +41,11 @@ const User = sequelize.define('User', {
   },
   businessActivity: {
     type: DataTypes.STRING(250),
-    allowNull: false,
+    allowNull: true,
+  },
+  Kbis: {
+    type: DataTypes.STRING(250),
+    allowNull: true,
   },
   isValidate: {
     type: DataTypes.BOOLEAN,

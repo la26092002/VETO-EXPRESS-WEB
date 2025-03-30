@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
+const { Acteur } = require('../constants/Enums');
 
 dotenv.config(); // Load environment variables
 
@@ -29,6 +30,43 @@ const isValidate = (req, res, next) => {
     next();
 };
 
+const isDocteur = (req, res, next) => {
+    if (req.user.typeActeur !== Acteur.Docteur) {
+        console.log(req.user.typeActeur)
+        return res.status(401).json({ message: "the user must be Doctor" });
+    }
+    next();
+};
+
+const isVendeur = (req, res, next) => {
+    if (req.user.typeActeur !== Acteur.Vendeur) {
+        return res.status(401).json({ message: "the user must be Vendeur" });
+    }
+    next();
+};
+const isClient = (req, res, next) => {
+    if (req.user.typeActeur !== Acteur.Client) {
+        return res.status(401).json({ message: "the user must be Client" });
+    }
+    next();
+};
+
+const isLivreur = (req, res, next) => {
+    if (req.user.typeActeur !== Acteur.Livreur) {
+        return res.status(401).json({ message: "the user must be Livreur" });
+    }
+    next();
+};
+
+const isAdmin = (req, res, next) => {
+    if (req.user.typeActeur !== Acteur.Admin) {
+        return res.status(401).json({ message: "the user must be Admin" });
+    }
+    next();
+};
 
 
-module.exports = { verifyToken, isValidate };
+
+
+
+module.exports = { verifyToken, isValidate, isDocteur ,isVendeur,isClient,isLivreur,isAdmin};
