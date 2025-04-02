@@ -58,6 +58,15 @@ const User = sequelize.define('User', {
   ban: {  // New field to ban users
     type: DataTypes.BOOLEAN,
     defaultValue: false, // By default, users are not banned
+  },
+  
+  userLatitude: {  // New field for user latitude
+    type: DataTypes.FLOAT,
+    defaultValue: null, // Default value is null
+  },
+  userLongitude: {  // New field for user longitude
+    type: DataTypes.FLOAT,
+    defaultValue: null, // Default value is null
   }
 
 

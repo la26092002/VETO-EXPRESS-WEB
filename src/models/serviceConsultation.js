@@ -9,7 +9,7 @@ const ServiceConsultation = sequelize.define('ServiceConsultation', {
         type: DataTypes.STRING(255),
         primaryKey: true,
     },
-   
+
     // Foreign key referencing User
     docteurId: {
         type: DataTypes.INTEGER,
@@ -30,8 +30,8 @@ const ServiceConsultation = sequelize.define('ServiceConsultation', {
         onDelete: 'CASCADE',
     },
 
-     // Date de rendez-vous
-     dateRdv: {
+    // Date de rendez-vous
+    dateRdv: {
         type: DataTypes.DATE,
         allowNull: true,
     },
@@ -43,10 +43,10 @@ const ServiceConsultation = sequelize.define('ServiceConsultation', {
 
     // Invoice type (buy or sale)
     type: {
-         type: DataTypes.ENUM(...Object.values(ServiceType)),
+        type: DataTypes.ENUM(...Object.values(ServiceType)),
         allowNull: false,
     },
-    
+
     ServiceLivraisonPar: {
         type: DataTypes.ENUM(...Object.values(ServiceLivraisonPar)),
         allowNull: false,
