@@ -6,6 +6,7 @@ const authRoutes = require('./routes/auth');
 const vendeurRoutes = require('./routes/vendeur');
 const clientRoutes = require('./routes/client');
 const docteurRoutes = require('./routes/docteur');
+const adminRoutes = require('./routes/admin');
 
 // import swagger ui module and swagger json file
 
@@ -28,6 +29,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/vendeur', vendeurRoutes);
 app.use('/api/client', clientRoutes);
 app.use('/api/docteur', docteurRoutes);
+app.use('/api/admin', adminRoutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

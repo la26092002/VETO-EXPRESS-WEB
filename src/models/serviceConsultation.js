@@ -1,7 +1,7 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../db');
 const User = require('./user');
-const { ServiceType, ServiceStatus } = require('../constants/Enums');
+const { ServiceType, ServiceStatus, ServiceLivraisonPar } = require('../constants/Enums');
 
 
 const ServiceConsultation = sequelize.define('ServiceConsultation', {
@@ -45,6 +45,12 @@ const ServiceConsultation = sequelize.define('ServiceConsultation', {
     type: {
          type: DataTypes.ENUM(...Object.values(ServiceType)),
         allowNull: false,
+    },
+    
+    ServiceLivraisonPar: {
+        type: DataTypes.ENUM(...Object.values(ServiceLivraisonPar)),
+        allowNull: false,
+        defaultValue: ServiceLivraisonPar.VetoMoov
     },
 });
 

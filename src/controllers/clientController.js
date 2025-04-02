@@ -1,4 +1,4 @@
-const { ServiceVenteType, ServiceType, Acteur } = require('../constants/Enums');
+const { ServiceVenteType, ServiceType, Acteur,ServiceLivraisonPar:LivraisonParFromEnum } = require('../constants/Enums');
 
 const ServiceConsultation = require('../models/serviceConsultation');
 
@@ -19,6 +19,10 @@ exports.creerServiceVente = async (req, res) => {
             return res.status(400).json({ message: "All fields (vendeurId, produits, type, ServiceLivraisonPar ) are required" });
         }
 
+        if (!Object.values(LivraisonParFromEnum).includes(ServiceLivraisonPar)) {
+            return res.status(400).json({ message: "Invalid service ServiceLivraisonPar" });
+        }
+        
         if (!Object.values(ServiceVenteType).includes(type)) {
             return res.status(400).json({ message: "Invalid service type" });
         }
@@ -51,17 +55,24 @@ exports.creerServiceVente = async (req, res) => {
 exports.creerServiceConsultation = async (req, res) => {
     try {
         const clientId = req.user?.userId; // Get client ID from authenticated user
-        const { docteurId, type } = req.body;
+        const { docteurId, type,ServiceLivraisonPar } = req.body;
 
         console.log("Client ID:", clientId);
         console.log("Doctor ID:", docteurId);
         console.log("Type:", type);
 
         // Validate inputs
-        if (!docteurId || !type) {
-            return res.status(400).json({ message: "All fields (docteurId, type) are required" });
+        if (!docteurId || !type || !ServiceLivraisonPar) {
+            return res.status(400).json({ message: "All fields (docteurId, type, ServiceLivraisonPar) are required" });
         }
+        
 
+        if (!Object.values(LivraisonParFromEnum).includes(ServiceLivraisonPar)) {
+            return res.status(400).json({ message: "Invalid service ServiceLivraisonPar" });
+        }
+        if (!Object.values(ServiceType).includes(type)) {
+            return res.status(400).json({ message: "Invalid service type" });
+        }
         if (!Object.values(ServiceType).includes(type)) {
             return res.status(400).json({ message: "Invalid service type" });
         }
