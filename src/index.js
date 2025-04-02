@@ -8,6 +8,8 @@ const clientRoutes = require('./routes/client');
 const docteurRoutes = require('./routes/docteur');
 const adminRoutes = require('./routes/admin');
 const livreurRoutes = require('./routes/livreur');
+const extraRoutes = require('./routes/extraRoute');
+
 
 // import swagger ui module and swagger json file
 
@@ -32,6 +34,8 @@ app.use('/api/client', clientRoutes);
 app.use('/api/docteur', docteurRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/livreur', livreurRoutes);
+app.use('/api/extraRoute', extraRoutes);
+
 
 
 const PORT = process.env.PORT || 3000;
