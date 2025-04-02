@@ -55,6 +55,10 @@ const User = sequelize.define('User', {
     type: DataTypes.ENUM(...Object.values(Acteur)),
     allowNull: false,
   },
+  ban: {  // New field to ban users
+    type: DataTypes.BOOLEAN,
+    defaultValue: false, // By default, users are not banned
+  }
 
 
 });

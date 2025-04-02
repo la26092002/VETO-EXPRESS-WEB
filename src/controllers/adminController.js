@@ -35,3 +35,37 @@ exports.AfficherUsers = async (req, res) => {
     }
 };
 
+
+
+exports.BanUser = async (req, res) => {
+    try {
+        const { userId } =req.query;
+        const { ban } = req.body;
+
+        // Validate userId
+        console.log(userId)
+        if (!userId || isNaN(userId)) {
+            return res.status(400).json({ message: "Invalid user ID" });
+        }
+
+        // Ensure ban is a boolean value
+        if (typeof ban !== 'boolean') {
+            return res.status(400).json({ message: "Le champ 'ban' doit être un booléen (true ou false)" });
+        }
+
+        // Find user by primary key
+        const user = await User.findByPk(userId);
+        if (!user) {
+            return res.status(404).json({ message: "Utilisateur non trouvé" });
+        }
+
+        // Update ban status
+        await user.update({ ban });
+
+        res.status(200).json({ message: `Utilisateur ${ban ? 'banni' : 'dé-banni'} avec succès`, user });
+    } catch (error) {
+        console.error("Erreur lors de la mise à jour du statut de bannissement:", error);
+        res.status(500).json({ message: "Erreur interne du serveur", error: error.message });
+    }
+};
+

@@ -66,7 +66,15 @@ const isAdmin = (req, res, next) => {
 };
 
 
+const isBan = (req, res, next) => {
+    if (req.user.ban === true) {
+        return res.status(401).json({ message: "the user is baned" });
+    }
+    next();
+};
 
 
 
-module.exports = { verifyToken, isValidate, isDocteur ,isVendeur,isClient,isLivreur,isAdmin};
+
+
+module.exports = { verifyToken, isValidate, isDocteur ,isVendeur,isClient,isLivreur,isAdmin,isBan};

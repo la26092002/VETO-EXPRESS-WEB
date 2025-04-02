@@ -32,7 +32,7 @@ exports.register = async (req, res, next) => {
         });
 
         // Generate JWT Token  isValidate: false must be false on production 
-        const token = jwt.sign({ userId: user.userId, typeActeur: user.typeActeur, isValidate: true }, process.env.JWT_SECRET, { expiresIn: '7d' });
+        const token = jwt.sign({ userId: user.userId, typeActeur: user.typeActeur, isValidate: true,ban: user.ban }, process.env.JWT_SECRET, { expiresIn: '7d' });
 
         res.status(201).json({
             message: 'User registered successfully',
@@ -65,7 +65,7 @@ exports.login = async (req, res, next) => {
 
         // Generate JWT Token
         const token = jwt.sign(
-            { userId: user.userId, typeActeur: user.typeActeur,isValidate: user.isValidate },
+            { userId: user.userId, typeActeur: user.typeActeur,isValidate: user.isValidate,ban: user.ban },
             process.env.JWT_SECRET,
             { expiresIn: '7d' }
         );

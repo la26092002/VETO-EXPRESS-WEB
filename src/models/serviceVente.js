@@ -63,7 +63,6 @@ const ServiceVente = sequelize.define('ServiceVente', {
     },
 
 
-
 });
 
 User.hasMany(ServiceVente, { foreignKey: 'vendeurId' });
