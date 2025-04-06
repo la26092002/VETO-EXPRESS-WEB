@@ -67,7 +67,22 @@ const User = sequelize.define('User', {
   userLongitude: {  // New field for user longitude
     type: DataTypes.FLOAT,
     defaultValue: null, // Default value is null
-  }
+  },
+
+
+
+  smsNotification: {  
+    type: DataTypes.BOOLEAN,
+    defaultValue: false, 
+  },
+  push_Notification: {  
+    type: DataTypes.BOOLEAN,
+    defaultValue: false, 
+  },
+  promotional_Notification: {  
+    type: DataTypes.BOOLEAN,
+    defaultValue: false, 
+  },
 
 
 });

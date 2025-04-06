@@ -99,7 +99,8 @@ exports.getMe = async (req, res) => {
 
 exports.updateUser = async (req, res, next) => {
     try {
-        const { nom, nomEtablissement, adresseMap, telephone, businessActivity } = req.body;
+        
+        const { nom, nomEtablissement, adresseMap, telephone, businessActivity, Kbis, userLatitude, userLongitude,smsNotification,push_Notification,promotional_Notification } = req.body;
         const userId = req.user.userId; // Get user ID from the authenticated token
 
         // Find user by ID
@@ -116,6 +117,14 @@ exports.updateUser = async (req, res, next) => {
         if (adresseMap) user.adresseMap = adresseMap;
         if (telephone) user.telephone = telephone;
         if (businessActivity) user.businessActivity = businessActivity;
+        if (Kbis) user.Kbis = Kbis;
+        if (userLatitude) user.userLatitude = userLatitude;
+        if (userLongitude) user.userLongitude = userLongitude;
+
+        if (smsNotification) user.smsNotification = smsNotification;
+        if (push_Notification) user.push_Notification = push_Notification;
+        if (promotional_Notification) user.promotional_Notification = promotional_Notification;
+    
 
         await user.save(); // Save changes
 
@@ -243,4 +252,6 @@ exports.changePassword = async (req, res, next) => {
         next(error);
     }
 };
+
+
 

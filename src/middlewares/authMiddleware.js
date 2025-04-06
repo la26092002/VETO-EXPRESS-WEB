@@ -77,4 +77,4 @@ const isBan = (req, res, next) => {
 
 
 
-module.exports = { verifyToken, isValidate, isDocteur ,isVendeur,isClient,isLivreur,isAdmin,isBan};
+module.exports = { verifyToken, isValidate, isDocteur, isVendeur, isClient, isLivreur, isAdmin, isBan };
