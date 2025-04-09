@@ -32,7 +32,7 @@ exports.register = async (req, res, next) => {
         });
 
         // Generate JWT Token  isValidate: false must be false on production 
-        const token = jwt.sign({ userId: user.userId, typeActeur: user.typeActeur, isValidate: true,ban: user.ban }, process.env.JWT_SECRET, { expiresIn: '7d' });
+        const token = jwt.sign({ userId: user.userId, typeActeur: user.typeActeur, isValidate: true, ban: user.ban }, process.env.JWT_SECRET, { expiresIn: '7d' });
 
         res.status(201).json({
             message: 'User registered successfully',
@@ -65,7 +65,7 @@ exports.login = async (req, res, next) => {
 
         // Generate JWT Token
         const token = jwt.sign(
-            { userId: user.userId, typeActeur: user.typeActeur,isValidate: user.isValidate,ban: user.ban },
+            { userId: user.userId, typeActeur: user.typeActeur, isValidate: user.isValidate, ban: user.ban },
             process.env.JWT_SECRET,
             { expiresIn: '7d' }
         );
@@ -73,7 +73,7 @@ exports.login = async (req, res, next) => {
 
         res.status(200).json({
             message: 'Login successful',
-            user: { id: user.userId, typeActeur: user.typeActeur, isValidate: user.isValidate,ban: user.ban },
+            user: { id: user.userId, typeActeur: user.typeActeur, isValidate: user.isValidate, ban: user.ban },
             token,
         });
     } catch (error) {
@@ -99,13 +99,13 @@ exports.getMe = async (req, res) => {
 
 exports.updateUser = async (req, res, next) => {
     try {
-        
-        const { nom, nomEtablissement, adresseMap, telephone, businessActivity, Kbis, userLatitude, userLongitude,smsNotification,push_Notification,promotional_Notification } = req.body;
+
+        const { password, newPassword, nom, nomEtablissement, adresseMap, telephone, businessActivity, Kbis, userLatitude, userLongitude, smsNotification, push_Notification, promotional_Notification } = req.body;
         const userId = req.user.userId; // Get user ID from the authenticated token
 
         // Find user by ID
         const user = await User.findByPk(userId, {
-            attributes: { exclude: ['password'] }
+            attributes: password ? undefined : { exclude: ['password'] }
         });
         if (!user) {
             return res.status(404).json({ message: "User not found" });
@@ -124,8 +124,18 @@ exports.updateUser = async (req, res, next) => {
         if (smsNotification) user.smsNotification = smsNotification;
         if (push_Notification) user.push_Notification = push_Notification;
         if (promotional_Notification) user.promotional_Notification = promotional_Notification;
-    
 
+
+        if (password && newPassword ) {
+            //change password
+            const isMatch = await bcrypt.compare(password, user.password);
+            if (!isMatch) {
+                return res.status(400).json({ message: "Current password is incorrect" });
+            }
+
+            const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+            user.password = hashedNewPassword;
+        }
         await user.save(); // Save changes
 
         res.status(200).json({ message: "User updated successfully", user });
@@ -211,7 +221,7 @@ exports.validateAccount = async (req, res, next) => {
             }
 
             // Update the user's validation status in the database
-            await User.update({ isValidate: true }, { where: { email } });const updatedUser = await User.findOne({ where: { email } });
+            await User.update({ isValidate: true }, { where: { email } }); const updatedUser = await User.findOne({ where: { email } });
             return res.status(200).json({
                 message: "Account successfully validated"
             });
