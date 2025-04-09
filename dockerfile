@@ -1,11 +1,18 @@
-# Use the official MySQL image
-FROM mysql:latest
+# Use official Node image
+FROM node:20
 
-# Set environment variables for MySQL
-ENV MYSQL_ROOT_PASSWORD=password
-ENV MYSQL_DATABASE=VetoExpress3
-ENV MYSQL_USER=user
-ENV MYSQL_PASSWORD=password
+# Set working directory
+WORKDIR /app
 
-# Expose the MySQL port
-EXPOSE 3306
+# Copy package files and install dependencies
+COPY package*.json ./
+RUN npm install
+
+# Copy the rest of the app
+COPY . .
+
+# Expose the app port
+EXPOSE 3000
+
+# Start the app
+CMD ["npm", "start"]

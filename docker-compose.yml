@@ -27,6 +27,29 @@ services:
     depends_on:
       - mysql
 
+  api:
+    build: .
+    container_name: express_vetoexpress
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      - DB_HOST=mysql
+      - DB_USER=user
+      - DB_PASSWORD=password
+      - DB_NAME=VetoExpress3
+      - DB_PORT=3306
+      - JWT_SECRET=HelloWorld!
+      - JWT_SECRETisValidate=HelloWorld!isValidate
+      - EMAIL_USER=larbibenyakhou.info@gmail.com
+      - EMAIL_PASS=pwji maxd grmy kpvs
+    depends_on:
+      - mysql
+    volumes:
+      - .:/app
+    working_dir: /app
+    command: npm start
+
 volumes:
   mysql_data:
     driver: local
