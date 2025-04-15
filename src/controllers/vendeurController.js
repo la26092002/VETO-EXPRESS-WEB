@@ -8,10 +8,7 @@ const ServiceVente = require('../models/serviceVente');
 
 exports.ajouterProduit = async (req, res, next) => {
     try {
-        const { productName,
-            productImage,
-            productPrice,
-            productType } = req.body;
+        const { productName, productPrice, productType } = req.body;
 
         if (req.user.typeActeur !== Acteur.Vendeur) {
             return res.status(401).json({ message: 'Just seller have access to add product' });
@@ -21,24 +18,29 @@ exports.ajouterProduit = async (req, res, next) => {
             return res.status(400).json({ message: "Invalid ProductType" });
         }
 
-        // Check if user exists
-        if (!productName || !productImage || !productPrice || !productType) {
-            return res.status(401).json({ message: 'Invalid productName, productImage, productPrice or productType' });
+        if (!productName || !req.file || !productPrice || !productType) {
+            return res.status(400).json({ message: 'Missing required fields' });
         }
 
-        console.log(parseInt(req.user.userId))
-        // Create a new user
-        await Product.create({
+        const imageName = req.file.filename;
+
+        const createdProduct = await Product.create({
             userId: parseInt(req.user.userId),
             productName,
-            productImage,
+            productImage: imageName,
             productPrice: parseInt(productPrice),
             productType,
         });
 
         res.status(200).json({
             message: 'Product added successfully',
-            result: { userId: req.user.userId, productName, productImage, productPrice: parseInt(productPrice), productType },
+            result: {
+                userId: req.user.userId,
+                productName,
+                productImage: imageName,
+                productPrice: parseInt(productPrice),
+                productType
+            }
         });
     } catch (error) {
         next(error);
@@ -76,7 +78,10 @@ exports.afficherProduitParUser = async (req, res, next) => {
 
         res.status(200).json({
             message: "Products retrieved successfully",
-            result: products,
+            result: products.map(product => ({
+                ...product.dataValues,
+                productImage: `ProductImages/${product.productImage}`
+            })),
             pagination: {
                 currentPage: page,
                 pageSize: size,

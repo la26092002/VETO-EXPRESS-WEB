@@ -6,6 +6,7 @@ const { v4: uuidv4 } = require('uuid'); // For generating unique serviceId
 const User = require('../models/user');
 const ServiceVente = require('../models/serviceVente');
 const Pet = require('../models/pet');
+const Product = require('../models/product');
 
 
 exports.creerServiceVente = async (req, res) => {
@@ -114,7 +115,7 @@ exports.afficherServiceVenteClient = async (req, res) => {
 exports.creerServiceConsultation = async (req, res) => {
     try {
         const clientId = req.user?.userId; // Get client ID from authenticated user
-        const { docteurId, type,ServiceLivraisonPar } = req.body;
+        const { docteurId, type,ServiceLivraisonPar, pet } = req.body;
 
         console.log("Client ID:", clientId);
         console.log("Doctor ID:", docteurId);
@@ -136,6 +137,11 @@ exports.creerServiceConsultation = async (req, res) => {
             return res.status(400).json({ message: "Invalid service type" });
         }
 
+          // Validate pet object
+          if (!pet || !pet.petName || !pet.petType || !pet.petAge) {
+            return res.status(400).json({ message: "Pet information (petName, petType, petAge) is required" });
+        }
+
         // Generate unique serviceId
         const serviceId = uuidv4();
 
@@ -150,6 +156,12 @@ exports.creerServiceConsultation = async (req, res) => {
             docteurId,
             clientId,
             type,
+            ServiceLivraisonPar,
+            pet: {
+                petName: pet.petName,
+                petType: pet.petType,
+                petAge: pet.petAge,
+            }
         });
 
         res.status(201).json({
@@ -197,7 +209,8 @@ exports.afficherServiceConsultationClient = async (req, res) => {
                 {
                     model: User,
                     as: 'docteur',
-                    attributes: ['userId', 'nom', 'telephone', 'email'],
+                    attributes: ['userId', 'nom', 'telephone', 'email', 'userLatitude', 'userLongitude'],
+                     
                 },
             ],
             order: [['createdAt', 'DESC']],
@@ -217,6 +230,44 @@ exports.afficherServiceConsultationClient = async (req, res) => {
         res.status(500).json({ message: "Internal server error", error: error.message });
     }
 };
+
+
+
+exports.getServiceConsultationById = async (req, res) => {
+    try {
+        const { serviceId } = req.params;
+
+        if (!serviceId) {
+            return res.status(400).json({ message: "serviceId is required" });
+        }
+
+        const consultation = await ServiceConsultation.findOne({
+            where: { serviceId },
+            include: [
+                {
+                    model: User,
+                    as: 'docteur',
+                    attributes: ['userId', 'nom', 'telephone', 'email', 'userLatitude', 'userLongitude'],
+                },
+                {
+                    model: User,
+                    as: 'client',
+                    attributes: ['userId', 'nom', 'telephone', 'email'],
+                }
+            ]
+        });
+
+        if (!consultation) {
+            return res.status(404).json({ message: "Service consultation not found" });
+        }
+
+        res.status(200).json({ consultation });
+    } catch (error) {
+        console.error("Error fetching consultation by serviceId:", error);
+        res.status(500).json({ message: "Internal server error", error: error.message });
+    }
+};
+
 
 
 
@@ -325,3 +376,48 @@ exports.addPet = async (req, res) => {
   
   
 
+
+
+
+  //Afficher les produits par user 
+  exports.afficherProduitParUser = async (req, res, next) => {
+    try {
+        const userId = req.query.userId;
+
+        if (!userId) {
+            return res.status(400).json({ message: "userId is required in query" });
+        }
+
+        let { page, size } = req.query;
+        page = parseInt(page) || 1;
+        size = parseInt(size) || 10;
+
+        if (page < 1 || size < 1) {
+            return res.status(400).json({ message: "Page and size must be positive numbers" });
+        }
+
+        const offset = (page - 1) * size;
+
+        const { rows: products, count: totalItems } = await Product.findAndCountAll({
+            where: { userId },
+            limit: size,
+            offset: offset,
+        });
+
+        res.status(200).json({
+            message: "Products retrieved successfully",
+            result: products.map(product => ({
+                ...product.dataValues,
+                productImage: `ProductImages/${product.productImage}`
+            })),
+            pagination: {
+                currentPage: page,
+                pageSize: size,
+                totalItems: totalItems,
+                totalPages: Math.ceil(totalItems / size),
+            },
+        });
+    } catch (error) {
+        next(error);
+    }
+};

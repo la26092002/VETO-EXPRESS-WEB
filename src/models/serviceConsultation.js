@@ -52,6 +52,13 @@ const ServiceConsultation = sequelize.define('ServiceConsultation', {
         allowNull: false,
         defaultValue: ServiceLivraisonPar.VetoMoov
     },
+
+
+    pet: {
+        type: DataTypes.JSON,
+        allowNull: true,
+        defaultValue: {},
+    },
 });
 
 // Define association

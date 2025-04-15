@@ -2,8 +2,9 @@ const express = require('express');
 const router = express.Router();
 const vendeurController = require('../controllers/vendeurController');
 const { verifyToken, isValidate, isVendeur, isBan } = require('../middlewares/authMiddleware');
+const upload = require('../middlewares/upload');
 
-router.post('/ajouterProduit', verifyToken, isValidate, isVendeur,  isBan, vendeurController.ajouterProduit);
+router.post('/ajouterProduit', verifyToken, isValidate, isVendeur,  isBan, upload.single('productImage'), vendeurController.ajouterProduit);
 router.get('/afficherProduitsParUser', verifyToken, isValidate,  isVendeur, isBan, vendeurController.afficherProduitParUser);
 router.put('/modifierProduit/:productId', verifyToken, isValidate,  isVendeur, isBan, vendeurController.modifierProduit);
 router.delete('/supprimerProduit/:productId', verifyToken, isValidate,  isVendeur, isBan, vendeurController.supprimerProduit);

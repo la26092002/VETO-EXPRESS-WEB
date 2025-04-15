@@ -8,6 +8,7 @@ router.get('/afficherServiceVenteClient', verifyToken, isValidate, isClient,isBa
 
 router.post('/creerServiceConsultation', verifyToken, isValidate, isClient,isBan, clientController.creerServiceConsultation);
 router.get('/afficherServiceConsultationClient', verifyToken, isValidate, isClient,isBan, clientController.afficherServiceConsultationClient);
+router.get('/getServiceConsultationById/:serviceId', verifyToken, isValidate, isClient,isBan, clientController.getServiceConsultationById);
 
 router.get('/getVendeurs', verifyToken, isValidate, isClient, isBan, clientController.getVendeurs);
 router.get('/getDocteurs', verifyToken, isValidate, isClient, isBan, clientController.getDocteurs);
@@ -18,6 +19,9 @@ router.post('/addPet', verifyToken, isValidate, isClient, isBan, clientControlle
 router.delete('/deletePet/:petId', verifyToken, isValidate, isClient, isBan, clientController.deletePet);
 router.get('/pets', verifyToken, isValidate, isClient, isBan, clientController.getPets);
 
+
+
+router.get('/afficherProduitParUser', clientController.afficherProduitParUser);
 
 
 

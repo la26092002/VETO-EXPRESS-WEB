@@ -16,6 +16,11 @@ const swaggerDocument = require('../swagger/swagger.json');
 
 const app = express();
 
+const path = require('path');
+
+app.use('/ProductImages', express.static(path.join(__dirname, 'ProductImages')));
+
+
 // Enable CORS
 app.use(cors({ origin: "*" }));
 
