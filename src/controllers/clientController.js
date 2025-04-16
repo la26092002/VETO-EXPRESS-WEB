@@ -380,7 +380,8 @@ exports.addPet = async (req, res) => {
 
 
   //Afficher les produits par user 
-  exports.afficherProduitParUser = async (req, res, next) => {
+  //Afficher les produits par user 
+exports.afficherProduitParUser = async (req, res, next) => {
     try {
         const userId = req.query.userId;
 
@@ -388,7 +389,7 @@ exports.addPet = async (req, res) => {
             return res.status(400).json({ message: "userId is required in query" });
         }
 
-        let { page, size } = req.query;
+        let { page, size, productType } = req.query;
         page = parseInt(page) || 1;
         size = parseInt(size) || 10;
 
@@ -398,8 +399,14 @@ exports.addPet = async (req, res) => {
 
         const offset = (page - 1) * size;
 
+        // Build the 'where' condition dynamically
+        const whereCondition = { userId };
+        if (productType) {
+            whereCondition.productType = productType;
+        }
+
         const { rows: products, count: totalItems } = await Product.findAndCountAll({
-            where: { userId },
+            where: whereCondition,
             limit: size,
             offset: offset,
         });
