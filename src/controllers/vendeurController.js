@@ -49,13 +49,12 @@ exports.ajouterProduit = async (req, res, next) => {
 
 
 
-
 exports.afficherProduitParUser = async (req, res, next) => {
     try {
         const userId = req.user.userId; // Get userId from authenticated user
 
-        // Extract pagination parameters from query (default: page=1, size=10)
-        let { page, size } = req.query;
+        // Extract pagination and filter parameters
+        let { page, size, productType } = req.query;
         page = parseInt(page) || 1;
         size = parseInt(size) || 10;
 
@@ -63,18 +62,20 @@ exports.afficherProduitParUser = async (req, res, next) => {
             return res.status(400).json({ message: "Page and size must be positive numbers" });
         }
 
-        // Calculate offset
         const offset = (page - 1) * size;
 
-        // Fetch products with pagination
+        // Build the where clause
+        const whereClause = { userId };
+        if (productType) {
+            whereClause.productType = productType;
+        }
+
+        // Fetch products with pagination and filtering
         const { rows: products, count: totalItems } = await Product.findAndCountAll({
-            where: { userId },
+            where: whereClause,
             limit: size,
             offset: offset,
         });
-
-        console.log(userId)
-
 
         res.status(200).json({
             message: "Products retrieved successfully",
@@ -93,6 +94,7 @@ exports.afficherProduitParUser = async (req, res, next) => {
         next(error);
     }
 };
+
 
 
 
