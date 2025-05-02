@@ -14,12 +14,6 @@ pnpm-debug.log*
 lerna-debug.log*
 .log
 
-# Environnements
-.env
-.env.local
-.env.development
-.env.test
-.env.production
 
 # Binaries
 dist/
