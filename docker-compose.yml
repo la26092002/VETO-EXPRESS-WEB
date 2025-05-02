@@ -1,54 +1,58 @@
 version: '3.8'
 
 services:
-  mysql:
-    image: mysql:latest
-    container_name: mysql_vetoexpress
-    restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: password
-      MYSQL_DATABASE: VetoExpress3
-      MYSQL_USER: user
-      MYSQL_PASSWORD: password
-    ports:
-      - "3309:3306"
-    volumes:
-      - mysql_data:/var/lib/mysql
-    healthcheck:
-      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
-  phpmyadmin:
-    image: phpmyadmin/phpmyadmin:latest
-    container_name: phpmyadmin_vetoexpress
-    restart: always
-    environment:
-      PMA_HOST: mysql
-      MYSQL_ROOT_PASSWORD: password
-    ports:
-      - "8088:80"
-    depends_on:
-      - mysql
-
-  api:
+  app:
     build: .
-    container_name: express_vetoexpress
-    restart: always
     ports:
       - "3000:3000"
-    env_file:
-      - .env
+    environment:
+      - NODE_ENV=development
+      - DB_HOST=mysql
+      - DB_USER=user
+      - DB_PASSWORD=rootpassword123
+      - DB_NAME=VetoExpress3
+      - DB_PORT=3306
+      - JWT_SECRET=HelloWorld!
+      - JWT_SECRETisValidate=HelloWorld!isValidate
+      - EMAIL_USER=larbibenyakhou.info@gmail.com
+      - EMAIL_PASS=pwji maxd grmy kpvs
     depends_on:
       mysql:
         condition: service_healthy
     volumes:
-      - .:/app
-      - /app/node_modules
-    working_dir: /app
-    command: npm start
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+
+  mysql:
+    image: mysql:8.0
+    environment:
+      - MYSQL_ROOT_PASSWORD=rootpassword123
+      - MYSQL_USER=user
+      - MYSQL_PASSWORD=rootpassword123
+      - MYSQL_DATABASE=VetoExpress3
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "--password=rootpassword123"]
+      interval: 5s
+      timeout: 10s
+      retries: 10
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      - PMA_HOST=mysql
+      - PMA_USER=root
+      - PMA_PASSWORD=rootpassword123
+      - PMA_PORT=3306
+    ports:
+      - "8080:80"
+    restart: always
 
 volumes:
-  mysql_data:
-    driver: local
+  mysql-data:
