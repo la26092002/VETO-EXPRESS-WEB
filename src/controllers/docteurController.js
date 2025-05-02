@@ -5,18 +5,17 @@ const { Acteur, ProductType, ServiceStatus } = require('../constants/Enums');
 const ServiceConsultation = require('../models/serviceConsultation');
 
 
+const { Op } = require('sequelize');
 
-//Afficher Services Vente par user 
 exports.afficherServiceConsultationParUser = async (req, res, next) => {
     try {
-        const userId = req.user.userId; // Get userId from authenticated user
-
+        const userId = req.user.userId;
 
         if (req.user.typeActeur !== Acteur.Docteur) {
-            return res.status(400).json({ message: "the user must be Doctor" });
+            return res.status(400).json({ message: "The user must be a Doctor" });
         }
-        // Extract pagination parameters from query (default: page=1, size=10)
-        let { page, size } = req.query;
+
+        let { page, size, serviceId, ServiceLivraisonPar } = req.query;
         page = parseInt(page) || 1;
         size = parseInt(size) || 10;
 
@@ -24,32 +23,41 @@ exports.afficherServiceConsultationParUser = async (req, res, next) => {
             return res.status(400).json({ message: "Page and size must be positive numbers" });
         }
 
-        // Calculate offset
         const offset = (page - 1) * size;
 
-        // Fetch products with pagination
+        // Build dynamic where clause
+        const whereClause = {
+            docteurId: userId,
+        };
+
+        if (serviceId) {
+            whereClause.serviceId = { [Op.like]: `%${serviceId}%` }; // Partial match
+        }
+
+        if (ServiceLivraisonPar) {
+            whereClause.ServiceLivraisonPar = ServiceLivraisonPar;
+        }
+
         const { rows: services, count: totalItems } = await ServiceConsultation.findAndCountAll({
-            where: { docteurId: userId },
+            where: whereClause,
             order: [['createdAt', 'DESC']],
             limit: size,
             offset: offset,
+            attributes: [
+                'serviceId',
+                'ServiceLivraisonPar',
+                'dateRdv',
+                'status',
+                'type',
+                'pet',
+                'clientId',
+                'docteurId',
+                'createdAt'
+            ]
         });
 
-        if (services.length === 0) {
-            return res.status(200).json({
-                message: "No services available",
-                result: [],
-                pagination: {
-                    currentPage: page,
-                    pageSize: size,
-                    totalItems: totalItems,
-                    totalPages: Math.ceil(totalItems / size),
-                }
-            });
-        }
-
-        res.status(200).json({
-            message: "Services retrieved successfully",
+        return res.status(200).json({
+            message: services.length === 0 ? "No services available" : "Services retrieved successfully",
             result: services,
             pagination: {
                 currentPage: page,

@@ -4,10 +4,10 @@ const User = require('../models/user');
 
 exports.AfficherServiceConsultations = async (req, res) => {
     try {
-        const { type,status, page = 1, limit = 10 } = req.query;  // Extract query params
+        const { type, status, page = 1, limit = 10, serviceId, ServiceLivraisonPar } = req.query;  // Extract query params
         
         const whereClause = {};
-        
+
         // If 'type' is provided in query, filter by it
         if (type && Object.values(ServiceType).includes(type)) {
             whereClause.type = type;
@@ -16,6 +16,16 @@ exports.AfficherServiceConsultations = async (req, res) => {
         // If 'status' is provided in query, filter by it
         if (status && Object.values(ServiceStatus).includes(status)) {
             whereClause.status = status;
+        }
+
+        // If 'serviceId' is provided in query, filter by it
+        if (serviceId) {
+            whereClause.serviceId = serviceId;  // Assuming serviceId is directly available in the model
+        }
+
+        // If 'ServiceLivraisonPar' is provided in query, filter by it
+        if (ServiceLivraisonPar) {
+            whereClause.ServiceLivraisonPar = ServiceLivraisonPar;  // Assuming ServiceLivraisonPar is a valid field in the model
         }
 
         // Fetch the consultations with pagination and filtering

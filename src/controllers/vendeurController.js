@@ -3,6 +3,7 @@ const bcrypt = require('bcrypt'); // Ensure bcrypt is used to hash/compare passw
 const Product = require('../models/product');
 const { Acteur, ProductType, ServiceStatus } = require('../constants/Enums');
 const ServiceVente = require('../models/serviceVente');
+const { Op } = require('sequelize');
 
 
 
@@ -54,7 +55,7 @@ exports.afficherProduitParUser = async (req, res, next) => {
         const userId = req.user.userId; // Get userId from authenticated user
 
         // Extract pagination and filter parameters
-        let { page, size, productType } = req.query;
+        let { page, size, productType  } = req.query;
         page = parseInt(page) || 1;
         size = parseInt(size) || 10;
 
@@ -180,8 +181,10 @@ exports.afficherServicesVenteParUser = async (req, res, next) => {
         if (req.user.typeActeur !== Acteur.Vendeur) {
             return res.status(400).json({ message: "the user must be Seller" });
         }
+        const whereClause = {};
+
         // Extract pagination parameters from query (default: page=1, size=10)
-        let { page, size } = req.query;
+        let { page, size , serviceId, ServiceLivraisonPar} = req.query;
         page = parseInt(page) || 1;
         size = parseInt(size) || 10;
 
@@ -192,9 +195,26 @@ exports.afficherServicesVenteParUser = async (req, res, next) => {
         // Calculate offset
         const offset = (page - 1) * size;
 
+          // If 'serviceId' is provided in query, filter by it
+          if (serviceId) {
+            whereClause.serviceId = {
+                [Op.like]: `%${serviceId}%`
+            };
+        }
+        
+
+        // If 'ServiceLivraisonPar' is provided in query, filter by it
+        if (ServiceLivraisonPar) {
+            whereClause.ServiceLivraisonPar = ServiceLivraisonPar;  // Assuming ServiceLivraisonPar is a valid field in the model
+        }
+        whereClause.vendeurId = userId; 
+
+       
+
+
         // Fetch products with pagination
         const { rows: services, count: totalItems } = await ServiceVente.findAndCountAll({
-            where: { vendeurId: userId },
+            where:  whereClause  ,
             order: [['createdAt', 'DESC']],
             limit: size,
             offset: offset,
