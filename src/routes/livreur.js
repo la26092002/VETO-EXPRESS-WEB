@@ -5,7 +5,7 @@ const { verifyToken, isValidate, isClient, isBan, isLivreur } = require('../midd
 
 
 router.get('/AfficherServiceConsultations', verifyToken, isValidate, isLivreur, isBan, livreurController.AfficherServiceConsultations);
-router.get('/modifierStatusServicesVenteParUser', verifyToken, isValidate, isLivreur, isBan, livreurController.modifierStatusServicesVenteParUser);
+router.put('/modifierStatusServicesVenteParUser', verifyToken, isValidate, isLivreur, isBan, livreurController.modifierStatusServicesVenteParUser);
 
 
 
