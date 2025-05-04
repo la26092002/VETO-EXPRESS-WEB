@@ -51,3 +51,32 @@ exports.AfficherServiceConsultations = async (req, res) => {
         res.status(500).json({ message: "Erreur interne du serveur", error: error.message });
     }
 };
+
+
+//Confirmer ou refuser Service Vente  (update service vente)
+exports.modifierStatusServicesVenteParUser = async (req, res, next) => {
+    try {
+        const userId = req.user.userId;
+        const { serviceId } = req.query;
+        const { status } = req.body;
+
+        if (!Object.values(ServiceStatus).includes(status)) {
+            return res.status(400).json({ message: "Invalid service status" });
+        }
+
+        const serviceVente = await ServiceVente.findOne({ where: { serviceId: serviceId, vendeurId: userId } });
+
+        if (!serviceVente) {
+            return res.status(404).json({ message: "Service not found or you don't have permission to modify it" });
+        }
+
+        await serviceVente.update({ status });
+
+        res.status(200).json({
+            message: "Service status updated successfully",
+            result: serviceVente,
+        });
+    } catch (error) {
+        next(error);
+    }
+};
