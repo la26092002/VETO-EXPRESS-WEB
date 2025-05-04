@@ -65,7 +65,7 @@ exports.modifierStatusServicesVenteParUser = async (req, res, next) => {
             return res.status(400).json({ message: "Invalid service status" });
         }
 
-        const serviceVente = await ServiceVente.findOne({ where: { serviceId: serviceId, vendeurId: userId } });
+        const serviceVente = await ServiceVente.findOne({ where: { serviceId: serviceId } });
 
         if (!serviceVente) {
             return res.status(404).json({ message: "Service not found or you don't have permission to modify it" });
@@ -80,4 +80,4 @@ exports.modifierStatusServicesVenteParUser = async (req, res, next) => {
     } catch (error) {
         next(error);
     }
-};
+};userId
