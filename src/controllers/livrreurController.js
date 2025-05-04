@@ -1,6 +1,7 @@
 const ServiceConsultation = require('../models/serviceConsultation');  // Import the model
 const { ServiceType, ServiceStatus } = require('../constants/Enums');  // Import enums
 const User = require('../models/user');
+const ServiceVente = require('../models/serviceVente');
 
 exports.AfficherServiceConsultations = async (req, res) => {
     try {
